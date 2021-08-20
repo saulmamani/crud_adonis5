@@ -14,7 +14,7 @@ export default class Books extends BaseSchema {
       table.text('description')
 
       //foreign key
-      table.integer('users_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

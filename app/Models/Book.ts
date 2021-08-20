@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 
 export default class Book extends BaseModel {
@@ -16,19 +16,25 @@ export default class Book extends BaseModel {
   public pages: number
 
   @column()
-  public url: string
+  public url: string | null
 
   @column()
   public description: string
 
   @column()
-  public users_id: number
+  public userId: number
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
+
+  //valores computados
+  @computed()
+  public get info() {
+    return `${this.code} | ${this.name}`
+  }
 
   //relationships
   @belongsTo(() => User)
