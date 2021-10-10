@@ -25,3 +25,4 @@ Route.get('/', async () => {
 });
 
 Route.resource('books', 'BookController').apiOnly();
+Route.post('upload-portada/:id', 'BookController.uploadPortada');

@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Book from 'App/Models/Book';
 import BookValidator from 'App/Validators/BookValidator';
-import UpdateBookValidator from 'App/Validators/UpdateBookValidator'
+import UpdateBookValidator from 'App/Validators/UpdateBookValidator';
 
 export default class BookController {
   public async index({ request, response }: HttpContextContract) {
@@ -41,5 +41,37 @@ export default class BookController {
     const book = await Book.findOrFail(params.id);
     await book.delete();
     return response.json({ success: book.$isDeleted });
+  }
+
+  public async uploadPortada({ params, request, response }) {
+    const portada = request.file('portada', {
+      types: ['image'],
+      size: '2mb',
+    });
+
+    const namePortada = `${params.id}.${portada.extname}`;
+    if (portada) {
+      await portada.move('./public/portadas', {
+        name: namePortada,
+        override: true,
+      });
+
+      if (!portada.move()) {
+        return request.status(422).send({
+          res: false,
+          message: portada.error(),
+        });
+      }
+
+      const book = await Book.findOrFail(params.id);
+      book.url = namePortada;
+      await book.save();
+      return response.json({ success: true, message: 'Portada subida correctamente!' });
+    } else {
+      return request.status(422).send({
+        res: false,
+        message: portada.error(),
+      });
+    }
   }
 }
