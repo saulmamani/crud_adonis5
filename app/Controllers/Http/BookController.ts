@@ -74,4 +74,15 @@ export default class BookController {
       });
     }
   }
+
+  public async getPortada({ params, response }) {
+    const book = await Book.find(params.id);
+    if (book) {
+      if (book.url) return response.attachment(`./public/portadas/${book.url}`, book.url, 'inline');
+      else return response.status(422).send({ res: false, message: 'sin portado' });
+    }
+    else{
+      return response.status(400).send({ res: false, message: 'no existe registro' });
+    }
+  }
 }
