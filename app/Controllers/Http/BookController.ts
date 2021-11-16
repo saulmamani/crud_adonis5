@@ -80,8 +80,7 @@ export default class BookController {
     if (book) {
       if (book.url) return response.attachment(`./public/portadas/${book.url}`, book.url, 'inline');
       else return response.status(422).send({ res: false, message: 'sin portado' });
-    }
-    else{
+    } else {
       return response.status(400).send({ res: false, message: 'no existe registro' });
     }
   }
