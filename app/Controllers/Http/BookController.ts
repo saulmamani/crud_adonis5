@@ -13,12 +13,11 @@ export default class BookController {
     return response.send(books);
   }
 
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request, response, auth }: HttpContextContract) {
     await request.validate(BookValidator);
 
     const data = await request.all();
-    // todo asociar al usuario autenticado
-    data['user_id'] = 1;
+    data['user_id'] = auth.use('api').user!.id;
     const book = await Book.create(data);
     return response.json({ success: book.$isPersisted });
   }

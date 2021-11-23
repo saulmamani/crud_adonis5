@@ -24,6 +24,12 @@ Route.get('/', async () => {
   return { hello: 'world' };
 });
 
-Route.resource('books', 'BookController').apiOnly();
-Route.post('upload-portada/:id', 'BookController.uploadPortada');
-Route.get('get-portada/:id', 'BookController.getPortada');
+Route.post('/login', 'AuthController.login');
+
+Route.group(() => {
+  Route.resource('books', 'BookController').apiOnly();
+  Route.post('upload-portada/:id', 'BookController.uploadPortada');
+  Route.get('get-portada/:id', 'BookController.getPortada');
+
+  Route.post('logout', 'AuthController.logout');
+}).middleware('auth');
